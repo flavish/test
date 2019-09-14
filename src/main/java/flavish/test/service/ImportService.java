@@ -1,4 +1,4 @@
 package flavish.test.service;
 
-public class IssueService {
+public class ImportService {
 }
