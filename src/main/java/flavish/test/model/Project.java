@@ -1,12 +1,10 @@
 package flavish.test.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +13,8 @@ import java.util.Set;
 @Entity
 @Table(name = "projects")
 public class Project extends BaseEntity {
+    @JsonIgnore
     @EqualsAndHashCode.Exclude
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Issue> issues = new HashSet<>();
 }

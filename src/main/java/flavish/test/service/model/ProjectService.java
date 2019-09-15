@@ -17,4 +17,8 @@ public class ProjectService {
     public List<Project> saveAll(List<Project> projects) {
         return projectRepository.saveAll(projects);
     }
+
+    public Project findByKey(String key) {
+        return projectRepository.findByKey(key);
+    }
 }
