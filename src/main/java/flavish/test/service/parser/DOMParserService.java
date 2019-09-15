@@ -32,6 +32,7 @@ public class DOMParserService implements ParserService {
 
     @Override
     public List<Project> parse(InputStream stream) throws ParserConfigurationException, IOException, SAXException {
+        System.out.println("DOM");
         Document doc = initParser().parse(stream);
         DOMSource source = new DOMSource(doc);
         DOMResult result = new DOMResult();

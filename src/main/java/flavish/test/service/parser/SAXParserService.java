@@ -24,6 +24,7 @@ public class SAXParserService implements ParserService {
 
     @Override
     public synchronized List<Project> parse(InputStream stream) throws ParserConfigurationException, SAXException, IOException {
+        System.out.println("SAX");
         projects = new ArrayList<>();
         InputSource inputSource = new InputSource(stream);
         SAXSource source = new SAXSource(inputSource);
