@@ -7,7 +7,7 @@ import java.math.BigInteger;
 
 @Data
 @MappedSuperclass
-class BaseEntity {
+public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")

@@ -3,7 +3,7 @@ package flavish.test.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -15,6 +15,7 @@ import java.util.Set;
 @Entity
 @Table(name = "projects")
 public class Project extends BaseEntity {
-    @OneToMany(mappedBy = "project")
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private Set<Issue> issues = new HashSet<>();
 }

@@ -14,6 +14,7 @@ public class Issue extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @EqualsAndHashCode.Exclude
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
