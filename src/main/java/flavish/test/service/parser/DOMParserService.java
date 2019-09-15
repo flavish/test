@@ -3,6 +3,9 @@ package flavish.test.service.parser;
 import flavish.test.model.Issue;
 import flavish.test.model.Project;
 import flavish.test.utils.DOMElementUtils;
+import flavish.test.utils.ValidatorUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,6 +15,8 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -19,13 +24,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@RequiredArgsConstructor
 @Service
 public class DOMParserService implements ParserService {
+
+    private final ResourceLoader resourceLoader;
 
     @Override
     public List<Project> parse(InputStream stream) throws ParserConfigurationException, IOException, SAXException {
         Document doc = initParser().parse(stream);
-        return getProjects(doc);
+        DOMSource source = new DOMSource(doc);
+        DOMResult result = new DOMResult();
+        ValidatorUtils.initValidator(getClass().getClassLoader().getResource("projects.xsd")).validate(source, result);
+        Document node = (Document) result.getNode();
+        return getProjects(node);
     }
 
     private ArrayList<Project> getProjects(Document doc) {
@@ -65,7 +77,9 @@ public class DOMParserService implements ParserService {
         return issue;
     }
 
-    private DocumentBuilder initParser() throws ParserConfigurationException {
-        return DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    private DocumentBuilder initParser() throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        return documentBuilderFactory.newDocumentBuilder();
     }
 }

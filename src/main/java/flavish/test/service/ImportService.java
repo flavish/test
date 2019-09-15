@@ -23,7 +23,7 @@ public class ImportService {
 
     @Transactional
     public void importData(MultipartFile file) throws IOException, ParserConfigurationException, SAXException {
-        List<Project> projects = domParserService.parse(file.getInputStream());
+        List<Project> projects = saxParserService.parse(file.getInputStream());
         projectService.saveAll(projects);
     }
 }

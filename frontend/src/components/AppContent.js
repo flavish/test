@@ -3,7 +3,7 @@ import IssueTable from './IssueTable';
 import Upload from 'antd/lib/upload';
 import Button from 'antd/lib/button';
 import Icon from 'antd/lib/icon';
-import notification from 'antd/lib/notification';
+import { notification } from 'antd';
 import { findAllIssues } from '../actions/issueActions.js';
 import { importIssues } from '../actions/importActions.js';
 import styled from 'styled-components';
@@ -27,7 +27,7 @@ class AppContent extends Component {
         this.setState({
             issues: res.data
         });
-    })
+    }, this.showErrorNotification);
  }
 
  componentDidMount() {
@@ -35,10 +35,10 @@ class AppContent extends Component {
  }
 
  showErrorNotification = (error) => {
-     notification.open({
+     notification.error({
         message: 'Ошибка',
-        description: error
-      });
+        description: error.response.data
+     });
  }
 
  importIssuesAction = (options) => {
@@ -51,7 +51,7 @@ class AppContent extends Component {
         <div>
            <UploadStyled customRequest={this.importIssuesAction}>
              <Button>
-               <Icon type="upload" /> Click to Import
+               <Icon type="upload" /> Импорт задач
              </Button>
            </UploadStyled>
            <IssueTable issues={issues}/>

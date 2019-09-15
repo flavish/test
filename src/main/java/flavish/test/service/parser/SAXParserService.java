@@ -3,14 +3,16 @@ package flavish.test.service.parser;
 import flavish.test.model.BaseEntity;
 import flavish.test.model.Issue;
 import flavish.test.model.Project;
+import flavish.test.utils.ValidatorUtils;
 import org.springframework.stereotype.Service;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.SAXSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -23,15 +25,15 @@ public class SAXParserService implements ParserService {
     @Override
     public synchronized List<Project> parse(InputStream stream) throws ParserConfigurationException, SAXException, IOException {
         projects = new ArrayList<>();
-        initParser().parse(stream, new SAXParserHandler());
+        InputSource inputSource = new InputSource(stream);
+        SAXSource source = new SAXSource(inputSource);
+        SAXResult saxResult = new SAXResult(new SAXParserHandler());
+        ValidatorUtils.initValidator(getClass().getClassLoader().getResource("projects.xsd")).validate(source, saxResult);
         ArrayList<Project> result = new ArrayList<>(this.projects);
         projects = null;
         return result;
     }
 
-    private SAXParser initParser() throws ParserConfigurationException, SAXException {
-        return SAXParserFactory.newInstance().newSAXParser();
-    }
     private class SAXParserHandler extends DefaultHandler {
         private Project project;
         private Issue issue;
